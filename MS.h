@@ -8,6 +8,8 @@
 #include <string>
 #include <unordered_set>
 #include <ctime>
+#include <math.h>
+#include <cassert>
 
 // #define boardH 5
 // #define boardW 6
@@ -42,12 +44,18 @@ const int BOMB = -1;
 const int UNMARKED = -2;
 
 static std::random_device dev;
-static std::mt19937 rng(0);
+static std::mt19937 rng(dev());
+// static std::mt19937 rng(0);
 
 int randomN(int N);
+double randUniform();
 
 // all arrangements of k 1's and (n-k) (-1)'s among n elements.
 vector<vector<int> > combination(int n, int k);
+
+int min(int x, int y);
+
+double sigmoid(double x);
 
 class Pos{
 public:
@@ -59,12 +67,21 @@ public:
         x = x_; y = y_;
     }
 
+    Pos(int index){
+        x = index / boardW;
+        y = index % boardW;
+    }
+
     string toString(){
         return to_string(x) + ' ' + to_string(y);
     }
 
     bool isValid(){
         return 0 <= x && x < boardH && 0 <= y && y < boardW;
+    }
+
+    int toIndex(){
+        return x * boardW + y;
     }
 
     vector<Pos> proximity(){

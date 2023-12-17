@@ -2,14 +2,22 @@
 #include "MS.h"
 
 int randomN(int N){
-    uniform_int_distribution<std::mt19937::result_type> dist(0,N-1); // distribution in range [1, 6]
-
+    uniform_int_distribution<std::mt19937::result_type> dist(0,N-1);
     return dist(rng);
-    // std::random_device dev;
-    // std::mt19937 rng(dev());
-    // std::uniform_int_distribution<std::mt19937::result_type> dist(0, N-1); // distribution in range [1, 6]
+}
 
-    // return dist(rng);
+double randUniform(){
+    uniform_real_distribution<double> distribution(0.0,1.0);
+    return distribution(rng);
+}
+
+double sigmoid(double x){
+    return 1/(1 + exp(-x));
+}
+
+int min(int x, int y){
+    if(x < y) return x;
+    return y;
 }
 
 vector<Pos> allPos(){
@@ -23,6 +31,7 @@ vector<Pos> allPos(){
 }
 
 vector<vector<int> > combination(int n, int k){
+    assert(n != 0);
     assert(0 <= k && k <= n);
     int nums[n];
     for(int i=0; i<n; i++){

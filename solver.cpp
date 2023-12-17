@@ -246,6 +246,7 @@ bool Solver::localSearch(){
                 count--;
             }
         }
+        if(count == 0) continue;
         vector<vector<int> > arrangements = combination(els.size(), count);
         bool bombWitness[els.size()];
         bool clearWitness[els.size()];

@@ -1,4 +1,7 @@
 
+Bugs:
+When defining objects outside the main function in main.cpp, try using pointers.
+
 Set with random guess
 Win rate: 2612 out of 10000
 
@@ -8,3 +11,34 @@ Win rate: 3320 out of 10000
 Set and local search
 Win rate: 2615 out of 10000
 Time: 967
+
+QLearning
+
+LR: 0.01/BS
+Momentum: 0
+
+Iteration: 100 Score: 0.298 Time stamp: 97
+Iteration: 200 Score: 0.317 Time stamp: 193
+Iteration: 300 Score: 0.297 Time stamp: 289
+Iteration: 400 Score: 0.326 Time stamp: 386
+Iteration: 500 Score: 0.305 Time stamp: 483
+Iteration: 600 Score: 0.322 Time stamp: 580
+Iteration: 700 Score: 0.294 Time stamp: 676
+Iteration: 800 Score: 0.305 Time stamp: 772
+Iteration: 900 Score: 0.298 Time stamp: 868
+
+LR: 0.1/BS
+Momentum: 0.7
+
+Iteration: 100 Score: 0.326 Time stamp: 97
+Iteration: 200 Score: 0.341 Time stamp: 194
+Iteration: 300 Score: 0.348 Time stamp: 290
+Iteration: 400 Score: 0.297 Time stamp: 386
+Iteration: 500 Score: 0.343 Time stamp: 482
+Iteration: 600 Score: 0.304 Time stamp: 577
+Iteration: 700 Score: 0.356 Time stamp: 674
+Iteration: 800 Score: 0.345 Time stamp: 769
+Iteration: 900 Score: 0.327 Time stamp: 866
+
+Run for 10000 iterations: Total score: 0.33844
+
