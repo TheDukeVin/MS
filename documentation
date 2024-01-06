@@ -42,3 +42,84 @@ Iteration: 900 Score: 0.327 Time stamp: 866
 
 Run for 10000 iterations: Total score: 0.33844
 
+Trial for structure:
+structure = LSTM::Model(LSTM::Shape(boardH, boardW, 10));
+    structure.addConv(LSTM::Shape(16, 30, 20), 3, 3);
+    structure.addPool(LSTM::Shape(8, 15, 20));
+    structure.addConv(LSTM::Shape(8, 14, 40), 3, 3);
+    structure.addPool(LSTM::Shape(4, 7, 40));
+    structure.addDense(800);
+    structure.addOutput(boardH*boardW);
+    structure.randomize(0.1);
+    structure.resetGradient();
+
+
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.500000 momentum: 0.700000 regRate: 0.000000 0.338673
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.200000 momentum: 0.700000 regRate: 0.000000 0.33476
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.100000 momentum: 0.700000 regRate: 0.000000 0.335497
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.050000 momentum: 0.700000 regRate: 0.000000 0.333567
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.020000 momentum: 0.700000 regRate: 0.000000 0.335047
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.010000 momentum: 0.700000 regRate: 0.000000 0.331473
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.500000 momentum: 0.900000 regRate: 0.000000 0.299263
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.200000 momentum: 0.900000 regRate: 0.000000 0.3287
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.100000 momentum: 0.900000 regRate: 0.000000 0.333617
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.050000 momentum: 0.900000 regRate: 0.000000 0.337053
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.020000 momentum: 0.900000 regRate: 0.000000 0.339923
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.010000 momentum: 0.900000 regRate: 0.000000 0.3393
+
+Trial for structure:
+
+structure = LSTM::Model(LSTM::Shape(boardH, boardW, 10));
+    structure.addConv(LSTM::Shape(16, 30, 30), 3, 3);
+    structure.addPool(LSTM::Shape(8, 15, 30));
+    structure.addConv(LSTM::Shape(8, 14, 50), 3, 3);
+    structure.addPool(LSTM::Shape(4, 7, 50));
+    structure.addDense(1000);
+    structure.addOutput(boardH*boardW);
+    structure.randomize(0.1);
+    structure.resetGradient();
+
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.500000 momentum: 0.700000 regRate: 0.000000 0.33395
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.100000 momentum: 0.700000 regRate: 0.000000 0.337083
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.050000 momentum: 0.700000 regRate: 0.000000 0.336753
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.010000 momentum: 0.700000 regRate: 0.000000 0.33624
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.500000 momentum: 0.900000 regRate: 0.000000 0.31179
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.100000 momentum: 0.900000 regRate: 0.000000 0.331123
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.050000 momentum: 0.900000 regRate: 0.000000 0.3358
+0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.010000 momentum: 0.900000 regRate: 0.000000 0.336093
+0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.500000 momentum: 0.700000 regRate: 0.000000 0.313803
+0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.100000 momentum: 0.700000 regRate: 0.000000 0.337627
+0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.010000 momentum: 0.700000 regRate: 0.000000 0.340103
+0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.500000 momentum: 0.900000 regRate: 0.000000 0.321127
+0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.100000 momentum: 0.900000 regRate: 0.000000 0.336043
+0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.050000 momentum: 0.900000 regRate: 0.000000 0.324197
+0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.010000 momentum: 0.900000 regRate: 0.000000 0.33626
+
+Fixed training to normalize with respect to rollout length:
+
+structure = LSTM::Model(LSTM::Shape(boardH, boardW, 10));
+    structure.addConv(LSTM::Shape(16, 30, 20), 3, 3);
+    structure.addPool(LSTM::Shape(8, 15, 20));
+    structure.addConv(LSTM::Shape(8, 14, 40), 3, 3);
+    structure.addPool(LSTM::Shape(4, 7, 40));
+    structure.addDense(800);
+    structure.addOutput(boardH*boardW);
+    structure.randomize(0.1);
+    structure.resetGradient();
+
+    0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.500000 momentum: 0.700000 regRate: 0.000000 0.340867
+    0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.100000 momentum: 0.700000 regRate: 0.000000 0.327757
+    0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.050000 momentum: 0.700000 regRate: 0.000000 0.342703
+    0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.010000 momentum: 0.700000 regRate: 0.000000 0.331213
+    0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.500000 momentum: 0.900000 regRate: 0.000000 0.335517
+    0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.100000 momentum: 0.900000 regRate: 0.000000 0.321023
+    0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.050000 momentum: 0.900000 regRate: 0.000000 0.32525
+    0: numIter: 1000 numRollout: 300 evalPeriod: 10 learnRate: 0.010000 momentum: 0.900000 regRate: 0.000000 0.34148
+    0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.500000 momentum: 0.700000 regRate: 0.000000 0.342347
+    0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.100000 momentum: 0.700000 regRate: 0.000000 0.341217
+    0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.050000 momentum: 0.700000 regRate: 0.000000 0.331167
+    0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.010000 momentum: 0.700000 regRate: 0.000000 0.34097
+    0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.500000 momentum: 0.900000 regRate: 0.000000 0.324113
+    0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.100000 momentum: 0.900000 regRate: 0.000000 0.335517
+    0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.050000 momentum: 0.900000 regRate: 0.000000 0.326653
+    0: numIter: 10000 numRollout: 30 evalPeriod: 100 learnRate: 0.010000 momentum: 0.900000 regRate: 0.000000 0.341737

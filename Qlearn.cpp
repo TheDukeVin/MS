@@ -1,10 +1,10 @@
 
 #include "DQN_MS.h"
 
-void DataQueue::enqueue(FeatureLabelPair flp){
-    queue[index % queueSize] = flp;
-    index ++;
-}
+// void DataQueue::enqueue(FeatureLabelPair flp){
+//     queue[index % queueSize] = flp;
+//     index ++;
+// }
 
 Qlearn::Qlearn(){
     structure = LSTM::Model(LSTM::Shape(boardH, boardW, 10));
@@ -15,18 +15,40 @@ Qlearn::Qlearn(){
     structure.addDense(800);
     structure.addOutput(boardH*boardW);
     structure.randomize(0.1);
+    structure.resetGradient();
 
-    netInput = new LSTM::Data(boardH * boardW * 10);
-    netOutput = new LSTM::Data(boardH * boardW);
+    // structure = LSTM::Model(LSTM::Shape(boardH, boardW, 10));
+    // structure.addConv(LSTM::Shape(16, 30, 30), 3, 3);
+    // structure.addPool(LSTM::Shape(8, 15, 30));
+    // structure.addConv(LSTM::Shape(8, 14, 50), 3, 3);
+    // structure.addPool(LSTM::Shape(4, 7, 50));
+    // structure.addDense(1000);
+    // structure.addOutput(boardH*boardW);
+    // structure.randomize(0.1);
+    // structure.resetGradient();
 
+    netInput = new LSTM::Data(structure.inputSize);
+    netOutput = new LSTM::Data(structure.outputSize);
     net = LSTM::Model(structure, NULL, netInput, netOutput);
 }
 
-double Qlearn::rollOut(){
+// void Qlearn::initializeNet(int index){
+//     assert(index <= net.size());
+//     if(index == net.size()){
+//         netInput.push_back(new LSTM::Data(boardH * boardW * 10));
+//         netOutput.push_back(new LSTM::Data(boardH * boardW));
+
+//         net.push_back(LSTM::Model(structure, NULL, netInput[index], netOutput[index]));
+//     }
+// }
+
+vector<FeatureLabelPair> Qlearn::rollout(){
     Environment env;
-    net.copyParams(&structure);
     vector<FeatureLabelPair> pairs;
-    for(int t=0; t<timeHorizon; t++){
+    int t;
+    net.copyParams(&structure);
+    for(t=0; t<timeHorizon; t++){
+        // initializeNet(t);
         vector<int> validActions = env.validActions();
         int action;
         if(randUniform() < epsilon){
@@ -54,22 +76,13 @@ double Qlearn::rollOut(){
     }
     for(int i=0; i<pairs.size(); i++){
         pairs[i].value = env.endValue;
-        dq.enqueue(pairs[i]);
     }
-    return env.endValue;
+    return pairs;
 }
 
-void Qlearn::train(int numIter, int numRollout, int evalPeriod, int batchSize, double learnRate, double momentum, double regRate){
+void Qlearn::train(int numIter, int numRollout, int evalPeriod, double learnRate, double momentum, double regRate){
     double scoreSum = 0;
     double totalScore = 0;
-
-    // int numIter = 10000;
-    // int numRollout = 10;
-    // int evalPeriod = 100;
-    // int batchSize = 100;
-    // double learnRate = 0.1;
-    // double momentum = 0.7;
-    // double regRate = 0;
 
     {
         ofstream fout(fileOut);
@@ -87,34 +100,41 @@ void Qlearn::train(int numIter, int numRollout, int evalPeriod, int batchSize, d
             }
             scoreSum = 0;
         }
-        //enqueue new rollouts
+        // generate new rollouts and train on them
         for(int i=0; i<numRollout; i++){
-            double score = rollOut();
+            // generate rollout
+            vector<FeatureLabelPair> data = rollout();
+
+            // update evaluation variables
+            double score = data[0].value;
             scoreSum += score;
             totalScore += score;
-        }
-        structure.resetGradient();
-        for(int i=0; i<batchSize; i++){
-            net.resetGradient();
-            int trainInstance = randomN(min(dq.index, queueSize));
-            FeatureLabelPair flp = dq.queue[trainInstance];
-            flp.env.inputObservations(netInput);
-            net.forwardPass();
-            for(int j=0; j<netOutput->size; j++){
-                netOutput->gradient[j] = 0;
+            int rolloutLength = data.size();
+
+            // train network
+            for(int t=0; t<rolloutLength; t++){
+                FeatureLabelPair flp = data[t];
+                net.resetGradient();
+                flp.env.inputObservations(netInput);
+                net.forwardPass();
+                for(int j=0; j<netOutput->size; j++){
+                    netOutput->gradient[j] = 0;
+                }
+                double actionLogit = netOutput->data[flp.action];
+                double actionQ = LSTM::sigmoid(actionLogit);
+
+                // normalize gradient based on rollout length.
+                netOutput->gradient[flp.action] = (actionQ - flp.value) / rolloutLength;
+                net.backwardPass();
+                structure.accumulateGradient(&net);
             }
-            double actionLogit = netOutput->data[flp.action];
-            double actionQ = LSTM::sigmoid(actionLogit);
-            netOutput->gradient[flp.action] = actionQ - flp.value;
-            net.backwardPass();
-            structure.accumulateGradient(&net);
         }
-        structure.updateParams(learnRate / batchSize, momentum, regRate);
+        structure.updateParams(learnRate / numRollout, momentum, regRate);
     }
+    winRate = totalScore / (numIter * numRollout);
     ofstream fout(fileOut, ios::app);
     {
-        fout << "Total score: " << (totalScore / (numIter * numRollout)) << '\n';
+        fout << "Total score: " << winRate << '\n';
         fout.close();
     }
-    
 }
