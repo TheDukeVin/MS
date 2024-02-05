@@ -106,8 +106,8 @@ public:
     LSTM::Model policyStructure;
     LSTM::Model valueStructure;
 
-    const static int datasetSize = 1000;
-    const int numBatches = 300;
+    const static int datasetSize = 60000;
+    const int numBatches = 6000;
     const int batchSize = 30;
 
     LSTM::Model policyNet;
@@ -118,14 +118,17 @@ public:
     LSTM::Data* valueInput;
     LSTM::Data* valueOutput;
 
-    vector<PPOStateInstance> dataset[datasetSize];
+    vector<PPOStateInstance> dataset;
 
     PPO();
 
     // Actor-critic training cadence
     vector<PPOStateInstance> rollout();
-    void generateDataset();
-    void updateNet();
+    double generateDataset(); // returns average score
+
+    void updateValueNet(string outFile);
+    void updatePolicyNet(string outFile);
+    // void updateNet();
 
     void train();
 };

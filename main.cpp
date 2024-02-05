@@ -1,6 +1,6 @@
 
 /*
-g++ -std=c++11 -O2 -pthread main.cpp MS.cpp solver.cpp common.cpp set.cpp Qlearn.cpp environment.cpp -I "./LSTM" LSTM/node.cpp LSTM/model.cpp LSTM/PVUnit.cpp LSTM/layer.cpp LSTM/layers/lstmlayer.cpp LSTM/layers/policy.cpp LSTM/layers/conv.cpp LSTM/layers/pool.cpp LSTM/params.cpp && sbatch MS.slurm
+g++ -std=c++11 -O2 -pthread main.cpp MS.cpp solver.cpp common.cpp set.cpp Qlearn.cpp PPO.cpp environment.cpp -I "./LSTM" LSTM/node.cpp LSTM/model.cpp LSTM/PVUnit.cpp LSTM/layer.cpp LSTM/layers/lstmlayer.cpp LSTM/layers/policy.cpp LSTM/layers/conv.cpp LSTM/layers/pool.cpp LSTM/params.cpp && sbatch MS.slurm
 
 g++ -std=c++11 -O2 -pthread main.cpp MS.cpp solver.cpp common.cpp set.cpp Qlearn.cpp PPO.cpp environment.cpp -I "./LSTM" LSTM/node.cpp LSTM/model.cpp LSTM/PVUnit.cpp LSTM/layer.cpp LSTM/layers/lstmlayer.cpp LSTM/layers/policy.cpp LSTM/layers/conv.cpp LSTM/layers/pool.cpp LSTM/params.cpp && ./a.out
 
@@ -143,6 +143,12 @@ int main(){
 
     PPO trainer;
     trainer.train();
+
+    // PPO trainer;
+    // double score = trainer.generateDataset();
+    // cout << "Dataset score: " << score << '\n';
+    // trainer.updateValueNet();
+    // trainer.updatePolicyNet();
 
     cout << "Time: " << (time(0) - start_time) << '\n';
 }
